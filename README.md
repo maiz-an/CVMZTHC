@@ -1,4 +1,5 @@
-# **🚀 Computer Vision Mastermind: Zero to Hero – A Collaborative Initiative**  
+![image](https://github.com/user-attachments/assets/121f1323-e321-4c0d-a608-8b1f0f5cd5a7)
+
 ### **Led by Ruby Poddar**  
 
 ## **🌟 A Grand Vision for the Future of Computer Vision**  
