@@ -1,6 +1,6 @@
 # **🔥 Gesture-Controlled Magic Wand Effect – Like Harry Potter! 🪄✨**
 
-## Develped by Ashwin Mehta
+## developed by Ashwin Mehta
 ## **📌 Project Overview**
 This project allows you to **draw in the air** using hand gestures, creating **glowing fire trails** just like in Harry Potter! It uses **AI-powered hand tracking** to detect your finger movements and displays **real-time fire effects** following your hand.
 
