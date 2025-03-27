@@ -1,6 +1,6 @@
-### **Synthetic Data Generation & Model Optimization for Low-Light Image Segmentation**  
+## **Synthetic Data Generation & Model Optimization for Low-Light Image Segmentation**  
 
-## developed by Aakash Sharma
+### developed by Aakash Sharma
 ## **📌 Project Overview**
 🔹 **Tech Stack**: OpenCV, CNN, Vision Transformers, Model Optimization, Synthetic Data Creation, Segmentation  
 🔹 **Concept**: Develop a model that **enhances and segments images taken in low-light conditions** using **synthetic dataset generation** and **EfficientNet for segmentation**.  
