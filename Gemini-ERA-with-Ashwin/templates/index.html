@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Chat Interface</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="sidebar">
+            <div class="new-chat">
+                <button id="newChatBtn"><i class="fas fa-plus"></i> New Chat</button>
+            </div>
+            <div class="chat-history">
+                <!-- Chat history will be populated here -->
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="chat-header">
+                <h1>Gemini Chat</h1>
+                <div class="header-actions">
+                    <button class="theme-toggle"><i class="fas fa-moon"></i></button>
+                    <button class="settings-btn"><i class="fas fa-cog"></i></button>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                {% for chat in chat_history %}
+                    <div class="message user-message">
+                        <div class="message-content">
+                            <p>{{ chat.question }}</p>
+                        </div>
+                    </div>
+                    <div class="message bot-message">
+                        <div class="message-content">
+                            <p>{{ chat.response }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="chat-input-container">
+                <form method="post" id="chatForm">
+                    <div class="input-wrapper">
+                        <textarea name="question" placeholder="Message Gemini..." required></textarea>
+                        <button type="submit" class="send-button" id="sendButton">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="background-animation"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatForm = document.getElementById('chatForm');
+            const chatMessages = document.getElementById('chatMessages');
+            const newChatBtn = document.getElementById('newChatBtn');
+            const themeToggle = document.querySelector('.theme-toggle');
+            const textarea = document.querySelector('textarea');
+            const sendButton = document.getElementById('sendButton');
+
+            // Auto-resize textarea
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            // Handle form submission
+            chatForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const question = formData.get('question').trim();
+                
+                if (!question) return;
+
+                // Disable input and show loading state
+                textarea.disabled = true;
+                sendButton.disabled = true;
+                sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                
+                // Add user message immediately
+                addMessage(question, 'user');
+                
+                try {
+                    const response = await fetch('/', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        // Add bot message
+                        addMessage(data.response, 'bot');
+                    } else {
+                        // Show error message
+                        addMessage(data.error || 'An error occurred. Please try again.', 'bot');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    addMessage('An error occurred. Please try again.', 'bot');
+                } finally {
+                    // Re-enable input and restore send button
+                    textarea.disabled = false;
+                    sendButton.disabled = false;
+                    sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                    
+                    // Clear textarea
+                    textarea.value = '';
+                    textarea.style.height = 'auto';
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            });
+
+            // Handle new chat
+            newChatBtn.addEventListener('click', async function() {
+                try {
+                    const response = await fetch('/new-chat', {
+                        method: 'POST'
+                    });
+                    
+                    if (response.ok) {
+                        chatMessages.innerHTML = '';
+                    } else {
+                        const data = await response.json();
+                        alert(data.error || 'Failed to clear chat history');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to clear chat history');
+                }
+            });
+
+            // Handle theme toggle
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-theme');
+                const icon = this.querySelector('i');
+                icon.classList.toggle('fa-moon');
+                icon.classList.toggle('fa-sun');
+            });
+
+            // Function to add messages
+            function addMessage(text, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${type}-message`;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                
+                const p = document.createElement('p');
+                p.textContent = text;
+                
+                contentDiv.appendChild(p);
+                messageDiv.appendChild(contentDiv);
+                chatMessages.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
