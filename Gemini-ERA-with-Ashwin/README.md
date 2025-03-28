@@ -32,6 +32,8 @@ Here are some exciting projects you'll find in this repository:
    - Join discussions and share ideas!
    - Boost your skills and mind-set 
 
+   
+
 ## 🤝 Join Us & Let's Rock AI Together! 🎸
 We welcome **developers, AI enthusiasts, and tech lovers** to be part of this exciting journey. Let’s push the boundaries of AI and **build something incredible together**! 🚀
 
